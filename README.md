@@ -64,9 +64,3 @@ e adicione as variáveis necessárias (veja a seção "Variáveis de Ambiente").
 5. **Faça os ajustes necessários no arquivo main**
 
 Coloque o nome da tabela que gostaria de atualizar, o restante do endpoint e os parâmetros de data.
-
-6. **Execute o projeto**
-
-```bash
-python main.py
-```
