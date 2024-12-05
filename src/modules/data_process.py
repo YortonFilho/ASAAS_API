@@ -32,8 +32,8 @@ def normalize_columns(df):
 # Função para tratar os dados de pagamentos 
 def process_payments_data(data):
     """
-    Processa e formata dados, incluindo conversões de colunas de data e tradução de valores de status,
-    gerando um dataFrame.
+    Processa e formata dados do endpoint "payments", incluindo conversões de colunas de data e 
+    tradução de valores de status, gerando um dataFrame.
 
     :param data: Dados brutos extraídos da API.
     """
@@ -92,5 +92,50 @@ def process_payments_data(data):
     
     except Exception as e:
         logger.error(f"Erro ao tratar dados! {e}")
+        raise e
 
-    
+def process_customers_data(data):
+    """
+    Processa e formata dados do endpoint "customers", incluindo conversões de colunas de data 
+    e tradução de valores gerando um dataFrame.
+
+    :param data: Dados brutos extraídos da API.
+    """
+    try:
+        df = pd.DataFrame(data)
+        df = normalize_columns(df)
+
+        # Traduzindo os nomes das colunas desejadas
+        columns_mapping = {
+            "id": "ID",
+            "dateCreated": "DATA_CRIACAO",
+            "name": "NOME",
+            "email": "EMAIL",
+            "phone": "TELEFONE",
+            "mobilePhone": "CELULAR",
+            "address": "ENDERECO",
+            "addressNumber": "NUMERO_ENDERECO",
+            "complement": "COMPLEMENTO",
+            "province": "PROVINCIA",
+            "postalCode": "CEP",
+            "cpfCnpj": "CPF_CNPJ",
+            "externalReference": "REFERENCIA_EXTERNA",
+            "city": "ID_CIDADE",
+            "cityName": "NOME_CIDADE",
+            "state": "ESTADO",
+            "country": "PAIS"
+        }
+
+        # Seleciona e renomeia as colunas
+        df_filtered = df[columns_mapping.keys()].rename(columns=columns_mapping)
+
+        # convertendo data para o formato 'DD/MM/AAAA'
+        df_filtered['DATA_CRIACAO'] = pd.to_datetime(df_filtered['DATA_CRIACAO']).dt.strftime('%d/%m/%Y')
+
+        logger.info("Dados processados com sucesso!")
+        return df_filtered
+
+    except Exception as e:
+        logger.error(f"Erro ao tratar dados! {e}")
+        raise e
+        
